@@ -12,6 +12,8 @@ public class CalculatorFunction {
 
     private static HashMap<Symbol, String> map = new HashMap<>();
 
+    private static boolean pressedFunction = false;
+
     public static void pushButton(Button button, Label label) {
         switch (button.getId()) {
             case "1":
@@ -24,10 +26,12 @@ public class CalculatorFunction {
             case "8":
             case "9":
             case "0": {
-                if (label.getValue().equals("0") || label.getValue().isEmpty()) {
+                if (label.getValue().equals("0") || pressedFunction == true) {
                     label.setValue(button.getId());
+                    pressedFunction = false;
                 } else {
                     label.setValue(label.getValue() + button.getId());
+                    pressedFunction = false;
                 }
                 break;
             }
@@ -69,12 +73,13 @@ public class CalculatorFunction {
                 if (map.get(Symbol.FIRST_DIGIT) == null || map.get(Symbol.FIRST_DIGIT).isEmpty()) {
                     map.put(Symbol.FIRST_DIGIT, label.getValue());
                     map.put(Symbol.OPERATION, button.getId());
-                    label.setValue("");
+                    pressedFunction = true;
                 } else {
                     map.put(Symbol.SECOND_DIGIT, label.getValue());
                     doEquals(button.getId(), label);
                     map.remove(Symbol.SECOND_DIGIT);
                     map.put(Symbol.FIRST_DIGIT, label.getValue());
+                    pressedFunction = true;
                 }
                 break;
             }
